@@ -1,0 +1,277 @@
+﻿<Window x:Class="FreezePunch.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:oxyplot="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf"
+        xmlns:d3="http://research.microsoft.com/DynamicDataDisplay/1.0"
+        xmlns:local="clr-namespace:FreezePunch"
+        mc:Ignorable="d"
+        Title="integrated Isotopic Labeling and Sampling system" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" Height="970.751" HorizontalContentAlignment="Center" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip" WindowState="Maximized" Background="#FFEBEBEB" Closing="Window_Closing" Icon="40x40 (1).png">
+    <!--//WindowStyle="None" ResizeMode="NoResize" Topmost="True"-->
+    <Window.Resources>
+        <Style x:Key="CheckRadioFocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="14,0,0,0" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="SliderCheckBox" TargetType="{x:Type CheckBox}">
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                        <ControlTemplate.Resources>
+                            <Storyboard x:Key="StoryboardIsChecked">
+                                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="CheckFlag">
+                                    <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                    <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="14"/>
+                                </DoubleAnimationUsingKeyFrames>
+                            </Storyboard>
+                            <Storyboard x:Key="StoryboardIsCheckedOff">
+                                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="CheckFlag">
+                                    <EasingDoubleKeyFrame KeyTime="0" Value="14"/>
+                                    <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                </DoubleAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </ControlTemplate.Resources>
+                        <BulletDecorator Background="Transparent" SnapsToDevicePixels="true">
+                            <BulletDecorator.Bullet>
+                                <Border x:Name="ForegroundPanel" BorderThickness="1" Width="35" Height="20" CornerRadius="10">
+                                    <Canvas>
+                                        <Border Background="White" x:Name="CheckFlag" CornerRadius="10" VerticalAlignment="Center" BorderThickness="1" Width="19" Height="18" RenderTransformOrigin="0.5,0.5">
+                                            <Border.RenderTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform/>
+                                                    <SkewTransform/>
+                                                    <RotateTransform/>
+                                                    <TranslateTransform/>
+                                                </TransformGroup>
+                                            </Border.RenderTransform>
+                                            <Border.Effect>
+                                                <DropShadowEffect ShadowDepth="1" Direction="180" />
+                                            </Border.Effect>
+                                        </Border>
+                                    </Canvas>
+                                </Border>
+                            </BulletDecorator.Bullet>
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center"/>
+                        </BulletDecorator>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasContent" Value="true">
+                                <Setter Property="FocusVisualStyle" Value="{StaticResource CheckRadioFocusVisual}"/>
+                                <Setter Property="Padding" Value="4,0,0,0"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <!--<Setter TargetName="ForegroundPanel" Property="Background" Value="{DynamicResource Accent}" />-->
+                                <Setter TargetName="ForegroundPanel" Property="Background" Value="Green" />
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard x:Name="BeginStoryboardCheckedTrue" Storyboard="{StaticResource StoryboardIsChecked}" />
+                                    <RemoveStoryboard BeginStoryboardName="BeginStoryboardCheckedFalse" />
+                                </Trigger.EnterActions>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter TargetName="ForegroundPanel" Property="Background" Value="Gray" />
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard x:Name="BeginStoryboardCheckedFalse" Storyboard="{StaticResource StoryboardIsCheckedOff}" />
+                                    <RemoveStoryboard BeginStoryboardName="BeginStoryboardCheckedTrue" />
+                                </Trigger.EnterActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="PreLabelCheckBox" TargetType="{x:Type CheckBox}">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="False" />
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Viewbox Width="{TemplateBinding FontSize}" Height="{TemplateBinding FontSize}">
+                                <Grid Width="16" Height="16" >
+                                    <Rectangle x:Name="CheckBoxRectangle" Fill="White" RadiusY="3" RadiusX="3"/>
+                                    <Rectangle x:Name="CheckBoxRectangleOut" Stroke="#EEEEEE" StrokeThickness="1" RadiusY="3" RadiusX="3"/>
+                                    <Grid x:Name="CheckedMark" Width="16" Height="16" Visibility="Collapsed">
+                                        <Path Stroke="White" SnapsToDevicePixels="False" StrokeThickness="2" Data="M3.35,7.5 L7,11.5 L12.5,4.0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                                    </Grid>
+                                </Grid>
+                            </Viewbox>
+                            <TextBlock Grid.Column="1" 
+                                   x:Name="CheckBoxText"
+                                   Text="{TemplateBinding Content}" 
+                                   FontFamily="{TemplateBinding FontFamily}" 
+                                   FontSize="{TemplateBinding FontSize}" 
+                                   Foreground="{TemplateBinding Foreground}" 
+                                   VerticalAlignment="Center" 
+                                   Margin="8,0,0,0"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="CheckedMark" Property="Visibility" Value="Visible"></Setter>
+                                <Setter TargetName="CheckBoxRectangle" Property="Fill" Value="#FF0092D6"></Setter>
+                                <Setter TargetName="CheckBoxRectangleOut" Property="Stroke" Value="Transparent"></Setter>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="CheckBoxText" Property="Foreground" Value="black"></Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Storyboard x:Key="OnVolumeControlMouseEnter">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="BdVolumeControl">
+                <EasingThicknessKeyFrame KeyTime="0:0:1" Value="1020,641,-17,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CircleEase/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="OnVolumeControlMouseLeave">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="BdVolumeControl">
+                <EasingThicknessKeyFrame KeyTime="0:0:1.5" Value= "1475,640,-384,0" >
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+    </Window.Resources>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="MouseEnter" SourceName="BdVolumeControl">
+            <BeginStoryboard x:Name="OnVolumeControlMouseEnter_BeginStoryboard" Storyboard="{StaticResource OnVolumeControlMouseEnter}"/>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="Mouse.MouseLeave" SourceName="BdVolumeControl">
+            <BeginStoryboard x:Name="OnVolumeControlMouseLeave_BeginStoryboard" Storyboard="{StaticResource OnVolumeControlMouseLeave}"/>
+        </EventTrigger>
+    </Window.Triggers>
+    <Grid>
+
+        <Label Content="Labeling" HorizontalAlignment="Left" Margin="1117,712,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Right" FontSize="24" FontFamily="Gill Sans MT" RenderTransformOrigin="0.63,-1.615"/>
+
+        <TextBlock HorizontalAlignment="Left" Margin="1178,680,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="33" Width="104" FontWeight="Bold" FontSize="20" Text="MANUAL"/>
+
+        <Label Content="mL/min" HorizontalAlignment="Left" Margin="1305,720,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Right" FontSize="24" FontFamily="Gill Sans MT" RenderTransformOrigin="0.63,-1.615"/>
+
+        <Label Content="Light:" HorizontalAlignment="Left" Margin="92,215,0,0" VerticalAlignment="Top" FontSize="36" FontFamily="Gill Sans MT"/>
+        <Label Content="L/min" HorizontalAlignment="Left" Margin="410,277,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Right" FontSize="36" FontFamily="Gill Sans MT" RenderTransformOrigin="0.63,-1.615"/>
+        <Label Content="Flow:" HorizontalAlignment="Left" Margin="92,402,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Right" FontSize="36" FontFamily="Gill Sans MT"/>
+        <Label HorizontalAlignment="Left" Margin="92,450,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Right" FontSize="36" Foreground="White">
+            <TextBlock FontFamily="Gill Sans MT" Foreground="Black"><Run Text="[CO"/><Run BaselineAlignment="Subscript" FontSize="18pt" Text="2"/><Run Text="]:"/></TextBlock>
+        </Label>
+        <Label Content="sampling time points" HorizontalAlignment="Left" Margin="1024,331,0,0" VerticalAlignment="Top" FontSize="26" Height="45" FontFamily="Inziu Roboto CL"/>
+        <Label HorizontalAlignment="Left" Margin="1208,231,0,0" VerticalAlignment="Top" FontSize="36" RenderTransformOrigin="0.424,0.486" Foreground="White"/>
+        <Label HorizontalAlignment="Left" Margin="942,231,0,0" VerticalAlignment="Top" FontSize="36" Foreground="White"/>
+        <Button x:Name="START" Content="START" HorizontalAlignment="Left" Margin="710,745,0,0" VerticalAlignment="Top" Width="262" Height="100" RenderTransformOrigin="0.504,-0.97" FontSize="48" Click="START_Click" FontWeight="Bold"/>
+        <Label Content="Total:" HorizontalAlignment="Left" Margin="1160,175,0,0" VerticalAlignment="Top" FontSize="36" FontFamily="Inziu Roboto CL"/>
+        <Label Content="Next:" HorizontalAlignment="Left" Margin="699,174,0,0" VerticalAlignment="Top" FontSize="36" FontFamily="Inziu Roboto CL" Width="101"/>
+        <Label x:Name="Next_Sampling" Content="00:00.00" Margin="709,208,277,605.5" FontSize="105" FontFamily="WW Digital" RenderTransformOrigin="-1.402,0.753"/>
+        <Label Content="iL/S" HorizontalAlignment="Left" Margin="204,20,0,0" VerticalAlignment="Top" Height="70" Width="117" FontSize="48" Foreground="#FF135DAA" FontWeight="Bold" FontFamily="Rockwell"/>
+        <Button x:Name="EXIT" HorizontalAlignment="Right" Margin="0,14,12,0" VerticalAlignment="Top" Width="56" Height="59" FontSize="24" Click="EXIT_Click" FontWeight="Bold" Foreground="{x:Null}" RenderTransformOrigin="-0.609,7.855" BorderBrush="{x:Null}" Background="{x:Null}"  Style="{StaticResource MyButton}"/>
+        <TextBox x:Name="LED_Volt" HorizontalAlignment="Left" Height="51" Margin="224,215,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="90" FontSize="36" KeyDown="LED_Volt_Enter" MaxLines="1" FontFamily="Gill Sans MT" TextAlignment="Right" IsEnabled="False" BorderBrush="Black" Background="{x:Null}" BorderThickness="0,0,0,2"/>
+        <TextBox x:Name="MFC_N2_SET" HorizontalAlignment="Left" Height="52" Margin="224,277,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="90" FontSize="36" KeyDown="MFC_N2_Set_Enter" AllowDrop="False" MaxLines="1" FontFamily="Gill Sans MT" TextAlignment="Right" IsEnabled="False" Background="{x:Null}" BorderThickness="0,0,0,2" BorderBrush="Black"/>
+        <Label x:Name="FLOW" Content="  " HorizontalAlignment="Left" Margin="224,402,0,0" VerticalAlignment="Top" FontSize="36" FontFamily="Gill Sans MT"/>
+        <Label x:Name="PPM" Content="  " HorizontalAlignment="Left" Margin="224,450,0,0" VerticalAlignment="Top" FontSize="36" FontFamily="Gill Sans MT"/>
+        <Label x:Name="MFC_N2_RT" Content="  " HorizontalAlignment="Left" Margin="322,277,0,0" VerticalAlignment="Top" FontSize="36" FontFamily="Gill Sans MT"/>
+        <TextBox x:Name="PRE_LABEL" HorizontalAlignment="Left" Height="51" Margin="763,382,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="80" FontSize="36" KeyDown="Pre_Labelling_Time_Enter" MaxLines="1" FontFamily="Gill Sans MT" TextAlignment="Right" IsEnabled="False"/>
+        <TextBox x:Name="SAMPLE_1" HorizontalAlignment="Left" Height="51" Margin="881,381,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="80" FontSize="36" KeyDown="Sampling_Interval_0_Enter" MaxLines="1" FontFamily="Gill Sans MT" TextAlignment="Right" Background="White"/>
+        <Label x:Name="Labelling_Time" Content="00:00.00" Margin="0,225,31,0" VerticalAlignment="Top" FontSize="68" FontFamily="WW Digital" HorizontalAlignment="Right" Width="299" Height="111"/>
+        <Label Content="ppm" HorizontalAlignment="Left" Margin="320,450,0,0" VerticalAlignment="Top" FontSize="36" FontFamily="Gill Sans MT"/>
+        <Label Content="L/min" HorizontalAlignment="Left" Margin="318,402,0,0" VerticalAlignment="Top" FontSize="36" FontFamily="Gill Sans MT"/>
+        <Label Content="%" HorizontalAlignment="Left" Margin="322,215,0,0" VerticalAlignment="Top" FontSize="36" FontFamily="Inziu Roboto CL"/>
+        <Label Content="s" HorizontalAlignment="Left" Margin="1432,382,0,0" VerticalAlignment="Top" FontSize="36" FontFamily="Inziu Roboto CL" RenderTransformOrigin="2.234,1.723"/>
+        <TextBlock TextWrapping="Wrap" VerticalAlignment="Bottom" Height="33" Width="617" Margin="445,0,446,2" TextAlignment="Center"><Run Text="Developed by "/><Run FontWeight="Bold" FontStyle="Italic" FontFamily="Georgia" Text="TANG QIMING"/><Run Text="  Plant Systems Biology Group, "/><Run Text="CEMPS"/><Run Text=", CAS"/><Run Text=", China"/><LineBreak/><Run Text="Ver: 0.5.1.  "/><Run Text="All Rights Reserved."/><Run Text=" "/><Run Text=" "/><Run Text="20"/><Run Text="20"/><Run Text="  "/></TextBlock>
+        <TextBox x:Name="TM" HorizontalAlignment="Right" Height="74" Margin="0,12,13,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="205" FontSize="30" TextAlignment="Right" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" Background="{x:Null}" FontFamily="WW Digital" Cursor="Arrow" AllowDrop="False" Focusable="False" IsReadOnlyCaretVisible="True" BorderThickness="0" />
+        <Button x:Name="COM_CONNECT" Content="CONNECT" HorizontalAlignment="Left" Margin="377,693,0,0" VerticalAlignment="Top" Width="200" Height="40" FontSize="24" Click="COM_CONNECT_Click"/>
+        <ComboBox x:Name="COM_LIST" HorizontalAlignment="Left" Margin="84,694,0,0" VerticalAlignment="Top" Width="90" Height="20">
+            <ComboBox.LayoutTransform>
+                <ScaleTransform ScaleX="2" ScaleY="2" />
+            </ComboBox.LayoutTransform>
+        </ComboBox>
+        <Button x:Name="COM_REFRESH" HorizontalAlignment="Left" Margin="275,693,0,0" VerticalAlignment="Top" Width="40" Height="40" RenderTransformOrigin="-0.12,0.539" BorderBrush="{x:Null}" Click="COM_REFRESH_Click" Background="{x:Null}" Foreground="{x:Null}">
+            <Image Source="refresh-normal.png"/>
+        </Button>
+        <TextBlock HorizontalAlignment="Left" Margin="75,635,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="46" Width="187" FontWeight="Bold" FontSize="28" Text="DEVICE"/>
+        <TextBox x:Name="LOG" Text="{Binding Text}" HorizontalAlignment="Left" Height="107" Margin="89,765,0,0" TextWrapping="WrapWithOverflow" VerticalAlignment="Top" Width="488" VerticalScrollBarVisibility="Auto" FontFamily="Consolas" Background="#19FFFFFF" IsReadOnly="True" IsUndoEnabled="False" AllowDrop="False" TextChanged="LOG_TextChanged"/>
+        <TextBox x:Name="MFC_CO2_SET" HorizontalAlignment="Left" Height="50" Margin="224,340,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="90" FontSize="36" KeyDown="MFC_CO2_Set_Enter" MaxLines="1" FontFamily="Gill Sans MT" TextAlignment="Right" IsEnabled="False" Background="{x:Null}" BorderThickness="0,0,0,2" BorderBrush="Black"/>
+        <Label x:Name="MFC_CO2_RT" Content="  " HorizontalAlignment="Left" Margin="322,340,0,0" VerticalAlignment="Top" FontSize="36" FontFamily="Gill Sans MT"/>
+        <GridSplitter HorizontalAlignment="Left" Height="250" Margin="59,635,0,0" VerticalAlignment="Top" Width="5" Background="#FF80BF2E"/>
+        <GridSplitter HorizontalAlignment="Left" Height="250" Margin="657,630,0,0" VerticalAlignment="Top" Width="5" Background="#FF80BF2E"/>
+        <TextBlock HorizontalAlignment="Left" Margin="671,630,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="46" Width="210" FontWeight="Bold" FontSize="28" Text="CONTROL"/>
+        <Label HorizontalAlignment="Left" Margin="92,340,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Right" FontSize="26" Foreground="White">
+            <TextBlock FontFamily="Gill Sans MT" FontSize="36" Foreground="Black"><Run Text="CO"/><Run BaselineAlignment="Subscript"  FontSize="26" Text="2"/><Run Text=":"/></TextBlock>
+        </Label>
+        <Label Content="Carrier-gas:"  HorizontalAlignment="Left" Margin="92,277,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Right" FontSize="36" FontFamily="Gill Sans MT Condensed"/>
+        <TextBox x:Name="SAMPLE_2" HorizontalAlignment="Left" Height="51" Margin="1034,381,0,0" TextWrapping="Wrap" Text="60" VerticalAlignment="Top" Width="80" FontSize="36" KeyDown="Sampling_Interval_1_Enter" MaxLines="1" FontFamily="Gill Sans MT" TextAlignment="Right" RenderTransformOrigin="1.322,0.615" Background="White"/>
+        <TextBox x:Name="SAMPLE_3" HorizontalAlignment="Left" Height="51" Margin="1191,381,0,0" TextWrapping="Wrap" Text="180" VerticalAlignment="Top" Width="80" FontSize="36" KeyDown="Sampling_Interval_2_Enter" MaxLines="1" FontFamily="Gill Sans MT" TextAlignment="Right" Background="White"/>
+        <TextBox x:Name="SAMPLE_4" HorizontalAlignment="Left" Height="51" Margin="1344,381,0,0" TextWrapping="Wrap" Text="420" VerticalAlignment="Top" Width="80" FontSize="36" KeyDown="Sampling_Interval_3_Enter" MaxLines="1" FontFamily="Gill Sans MT" TextAlignment="Right" Background="White"/>
+        <Label Content="mL/min" HorizontalAlignment="Left" Margin="410,340,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Right" FontSize="36" FontFamily="Gill Sans MT" RenderTransformOrigin="0.63,-1.615"/>
+        <CheckBox x:Name="PRE_CHECK" Content="pre-label" HorizontalAlignment="Left" Margin="702,339,0,0" VerticalAlignment="Top" FontSize="26" Style="{StaticResource PreLabelCheckBox}" Checked="PRE_CHECK_Checked" Unchecked="PRE_CHECK_Unchecked"/>
+        <Separator HorizontalAlignment="Left" Height="81" Margin="922,314,0,0" VerticalAlignment="Top" Width="103"/>
+        <Separator HorizontalAlignment="Left" Height="81" Margin="1280,314,0,0" VerticalAlignment="Top" Width="110"/>
+        <Separator HorizontalAlignment="Left" Height="81" Margin="910,326,0,0" VerticalAlignment="Top" Width="24" RenderTransformOrigin="0.5,0.5">
+            <Separator.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-90.513"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Separator.RenderTransform>
+        </Separator>
+        <Separator HorizontalAlignment="Left" Height="81" Margin="1379,326,0,0" VerticalAlignment="Top" Width="24" RenderTransformOrigin="0.5,0.5">
+            <Separator.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-90.513"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Separator.RenderTransform>
+        </Separator>
+        <Separator HorizontalAlignment="Left" Height="81" Margin="964,367,0,0" VerticalAlignment="Top" Width="66"/>
+        <Separator HorizontalAlignment="Left" Height="81" Margin="1120,367,0,0" VerticalAlignment="Top" Width="66"/>
+        <Separator HorizontalAlignment="Left" Height="81" Margin="1274,367,0,0" VerticalAlignment="Top" Width="66"/>
+        <Label Content="RH:" HorizontalAlignment="Left" Margin="92,503,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Right" FontSize="36" FontFamily="Gill Sans MT"/>
+        <Label Content="%" HorizontalAlignment="Left" Margin="322,503,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Right" FontSize="36" FontFamily="Gill Sans MT"/>
+        <Label x:Name="RH" Content="  " HorizontalAlignment="Left" Margin="224,503,0,0" VerticalAlignment="Top" FontSize="36" FontFamily="Gill Sans MT"/>
+        <Label x:Name="MFM_CO2_RT" Content="   " HorizontalAlignment="Left" Margin="1227,706,0,0" VerticalAlignment="Top" FontSize="36" FontFamily="Gill Sans MT" Foreground="#FFFF3030" Background="#00000000"/>
+        <TextBlock HorizontalAlignment="Left" Margin="76,145,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="46" Width="400" FontWeight="Bold" FontSize="28" Text="AMBIENT CONDITION"/>
+        <GridSplitter HorizontalAlignment="Left" Height="423" Margin="60,146,0,0" VerticalAlignment="Top" Width="5" Background="#FF80BF2E"/>
+        <TextBlock HorizontalAlignment="Left" Margin="674,143,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="46" Width="400" FontWeight="Bold" FontSize="28" Text="CHASING-TIME"/>
+        <GridSplitter HorizontalAlignment="Left" Height="423" Margin="658,144,0,0" VerticalAlignment="Top" Width="5" Background="#FF80BF2E"/>
+        <Grid>
+            <CheckBox x:Name="LABEL_SW" HorizontalAlignment="Left" Margin="1068,724,0,0" VerticalAlignment="Top" Style="{DynamicResource SliderCheckBox}" Content="{Binding IsChecked, ElementName=Checker1}" Click="LABEL_SW_Click" />
+            <Button x:Name="U1_SW" Content="UNIT 1" HorizontalAlignment="Left" Margin="1058,770,0,0" VerticalAlignment="Top" Width="149" Height="50" FontSize="24" FontWeight="Bold" MouseDown="U1_SW_MouseDown" MouseUp="U1_SW_MouseUp" TouchDown="U1_SW_TouchDown" TouchUp="U1_SW_TouchUp"/>
+            <Button x:Name="U2_SW" Content="UNIT 2" HorizontalAlignment="Left" Margin="1223,770,0,0" VerticalAlignment="Top" Width="149" Height="50" FontSize="24" FontWeight="Bold" MouseDown="U2_SW_MouseDown" MouseUp="U2_SW_MouseUp" TouchDown="U2_SW_TouchDown" TouchUp="U2_SW_TouchUp"/>
+            <Button x:Name="U3_SW" Content="UNIT 3" HorizontalAlignment="Left" Margin="1058,833,0,0" VerticalAlignment="Top" Width="149" Height="50" FontSize="24" FontWeight="Bold" MouseDown="U3_SW_MouseDown" MouseUp="U3_SW_MouseUp" TouchDown="U3_SW_TouchDown" TouchUp="U3_SW_TouchUp"/>
+            <Button x:Name="U4_SW" Content="UNIT 4" Margin="1223,833,0,0" FontSize="24" FontWeight="Bold" MouseDown="U4_SW_MouseDown" MouseUp="U4_SW_MouseUp" HorizontalAlignment="Left" Width="149" Height="50" VerticalAlignment="Top" TouchDown="U4_SW_TouchDown" TouchUp="U4_SW_TouchUp"/>
+            <Border BorderBrush="Silver" BorderThickness="0" x:Name="BdVolumeControl" Margin= "1475,640,-384,0">
+                <local:Mini_Keyboard x:Name="mini_keyboard" Margin="-1,8,-71,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="488" Height="290" Foreground="White" Background="#FFE8E8E8" />
+            </Border>
+            <Label Content="An integrated isotopic labeling and sampling system of plant leaf" HorizontalAlignment="Left" Margin="206,68,0,0" VerticalAlignment="Top" Height="53" Width="526" FontSize="24" Foreground="#FF135DAA" FontWeight="Bold" FontFamily="Rockwell Condensed"/>
+            <Image Margin="20,28,0,0" Source="cemps_logo.png" Stretch="Fill" Height="70" VerticalAlignment="Top" HorizontalAlignment="Left" Width="172"/>
+        </Grid>
+        <TextBlock HorizontalAlignment="Left" Margin="766,677,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="33" Width="146" FontWeight="Bold" FontSize="20" Text="AUTOMATIC" TextAlignment="Center"/>
+    </Grid>
+
+</Window>

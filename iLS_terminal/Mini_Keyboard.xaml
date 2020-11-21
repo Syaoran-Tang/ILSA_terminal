@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="FreezePunch.Mini_Keyboard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FreezePunch"
+             mc:Ignorable="d" Height="288.717" Width="487.873">
+    <Grid HorizontalAlignment="Left"  Margin="73,25,0,0" Width="340" Height="241" VerticalAlignment="Top">
+        <Button x:Name="IN_7" Content="7" Margin="1,0,265,0" VerticalAlignment="Top" Width="75" FontSize="26" Height="50" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalContentAlignment="Center" RenderTransformOrigin="4.883,1.114" PreviewGotKeyboardFocus="IN_7_PreviewGotKeyboardFocus" Click="IN_7_Click"/>
+        <Button x:Name="IN_8" Content="8" Margin="90,0,0,0" VerticalAlignment="Top" Width="74" FontSize="26" Height="50" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalContentAlignment="Center" PreviewGotKeyboardFocus="IN_8_PreviewGotKeyboardFocus" Click="IN_8_Click"/>
+        <Button x:Name="IN_9" Content="9" Margin="0,0,90,0" Width="75" FontSize="26" Height="50" HorizontalContentAlignment="Center" HorizontalAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top" PreviewGotKeyboardFocus="IN_9_PreviewGotKeyboardFocus" Click="IN_9_Click"/>
+        <Button x:Name="IN_4" Content="4" Margin="0,65,0,0" VerticalAlignment="Top" Width="76" FontSize="26" Height="50" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalContentAlignment="Center" PreviewGotKeyboardFocus="IN_4_PreviewGotKeyboardFocus" Click="IN_4_Click"/>
+        <Button x:Name="IN_5" Content="5" Margin="90,65,0,0" VerticalAlignment="Top" Width="75" FontSize="26" Height="50" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalContentAlignment="Center" PreviewGotKeyboardFocus="IN_5_PreviewGotKeyboardFocus" Click="IN_5_Click"/>
+        <Button x:Name="IN_6" Content="6" Margin="0,65,90,0" Width="75" FontSize="26" Height="50" HorizontalContentAlignment="Center" HorizontalAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top" PreviewGotKeyboardFocus="IN_6_PreviewGotKeyboardFocus" Click="IN_6_Click"/>
+        <Button x:Name="IN_1" Content="1" Margin="0,130,0,0" Width="74" FontSize="26" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalContentAlignment="Center" Height="50" VerticalAlignment="Top" PreviewGotKeyboardFocus="IN_1_PreviewGotKeyboardFocus" Click="IN_1_Click"/>
+        <Button x:Name="IN_2" Content="2" Margin="90,130,0,0" Width="75" FontSize="26" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalContentAlignment="Center" Height="50" VerticalAlignment="Top" PreviewGotKeyboardFocus="IN_2_PreviewGotKeyboardFocus" Click="IN_2_Click"/>
+        <Button x:Name="IN_3" Content="3" Margin="0,130,90,0" Width="75" FontSize="26" HorizontalContentAlignment="Center" HorizontalAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top" Height="50" PreviewGotKeyboardFocus="IN_3_PreviewGotKeyboardFocus" Click="IN_3_Click"/>
+        <Button x:Name="IN_Dot" Content="." Margin="0,0,90,0" Width="74" FontSize="26" HorizontalContentAlignment="Center" HorizontalAlignment="Right" VerticalContentAlignment="Center" Height="50" VerticalAlignment="Bottom" PreviewGotKeyboardFocus="IN_Dot_PreviewGotKeyboardFocus" Click="IN_Dot_Click"/>
+        <Button x:Name="CLEAR" Content ="CLR" Width="74" FontSize="22" Height="115" HorizontalContentAlignment="Center" HorizontalAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top" FontWeight="Bold" PreviewGotKeyboardFocus="CLEAR_PreviewGotKeyboardFocus" Click="CLEAR_Click"/>
+        <Button x:Name="IN_0" Content="0" Width="165" FontSize="26" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalContentAlignment="Center" Height="50" VerticalAlignment="Bottom" PreviewGotKeyboardFocus="IN_0_PreviewGotKeyboardFocus" Click="IN_0_Click"/>
+        <Button x:Name="SET" Content="SET" FontSize="22" FontWeight="Bold" Height="108" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" PreviewGotKeyboardFocus="SET_PreviewGotKeyboardFocus"/>
+        <Label Content="↓NUMBER PAD↓" Margin="-148,105,316,0" VerticalAlignment="Top" FontWeight="Bold" FontFamily="Gill Sans MT" Height="31" RenderTransformOrigin="0.5,0.5" VerticalContentAlignment="Center" FontSize="20">
+            <Label.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-90.194"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Label.RenderTransform>
+        </Label>
+    </Grid>
+</UserControl>
