@@ -197,10 +197,6 @@ namespace FreezePunch
                 cycle_count = 0;
             }
         }
-        private void EXIT_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         public void RefreshData()
         {
@@ -256,7 +252,7 @@ namespace FreezePunch
                 //
                 double MFC_N2_float = (float)MFC_N2_raw / 4000 * 400;
                 double MFC_CO2_float = (float)(MFC_CO2_raw) / 4000 * 30;
-                double MFM_float = (float)(MFM_raw) / 3200 * 30;
+                double MFM_float = (float)(MFM_raw -383)/ 3200 * 30;
                 double RH_real = (float)RH_raw / 4000 * 5 / 3 * 100;   //0-3V 0-99.9 %RH
                 double Total_Flow = MFC_N2_float + MFC_CO2_float / 1000;
                 MFC_N2_RT.Dispatcher.Invoke(new Action(delegate
@@ -479,9 +475,9 @@ namespace FreezePunch
                     LED_Volt.IsEnabled = MFC_N2_SET.IsEnabled = MFC_CO2_SET.IsEnabled = true;
                     log_context.Text += "[" + TM.Text + "]" + COM_LIST.Items[COM_LIST.SelectedIndex].ToString() + " connected.\r\n";
                 }
-                catch (Exception ex)
+                catch 
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show("Can not detect the device.");
                 }
 
             }
@@ -492,8 +488,7 @@ namespace FreezePunch
                 {
                     if (melsecSerial.ReadBool("M500").IsSuccess)
                     {
-                        if (melsecSerial.ReadBool("M500").Content)
-                        { melsecSerial.Write("M500", false); }
+                        melsecSerial.Write("M500", false);
                     }
                     else
                     {
@@ -770,7 +765,7 @@ namespace FreezePunch
         {
             if (COM_Connectted)
             {
-                bool status = melsecSerial.ReadBool("M500").IsSuccess;
+                bool status = melsecSerial.ReadBool("M500").Content;
                 melsecSerial.Write("M500", !status);
                 LABEL_SW.IsChecked = !status;
                 if (!status)
